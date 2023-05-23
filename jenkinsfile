@@ -1,0 +1,38 @@
+pipeline 
+{
+    agent any
+   
+    options 
+    { 
+      skipDefaultCheckout() 
+      disableConcurrentBuilds()
+    }    
+    stages {		
+        stage('Checkout Source') {
+            steps {
+                    cleanWs()
+                    echo ":: git checkout source"
+                    git branch: 'main', url: 'https://github.com/venh/hello-world-python.git'                
+                  }
+	} // end of Checkout Stage
+		
+        stage('Building & Running Container') {
+            steps {
+		     echo "Build Docker Image and Run the Container"
+		     script{ 
+				sh """
+					docker rmi -f py-img
+					docker build -t py-img .
+					docker rm -f py-container
+					docker run --name py-container py-img
+				 """
+		      }
+              } // end of Steps
+        } // end of Build stage	
+    } // end of Stages
+    post{
+        always {            
+	    printMsg("$JOB_BASE_NAME")
+	}
+    } // end of post
+} // end of Pipeline
