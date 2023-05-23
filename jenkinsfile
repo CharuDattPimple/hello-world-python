@@ -10,9 +10,8 @@ pipeline
     stages {		
         stage('Checkout Source') {
             steps {
-                    cleanWs()
                     echo ":: git checkout source"
-                    git branch: 'main', url: 'https://github.com/venh/hello-world-python.git'                
+                    git branch: 'main', url: 'https://github.com/CharuDattPimple/hello-world-python.git'                
                   }
 	} // end of Checkout Stage
 		
@@ -20,7 +19,7 @@ pipeline
             steps {
 		     echo "Build Docker Image and Run the Container"
 		     script{ 
-				sh """
+				bat """
 					docker rmi -f py-img
 					docker build -t py-img .
 					docker rm -f py-container
